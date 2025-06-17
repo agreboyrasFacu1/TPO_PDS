@@ -16,10 +16,11 @@ public class RepositorioClientes{
     }
 
 public void agregarCliente(Cliente cliente) throws ElementoYaExiste {
-        if (clientes.containsKey(cliente.getDni())) {
+        String dniStr = String.valueOf(cliente.getDni());
+        if (clientes.containsKey(dniStr)) {
             throw new ElementoYaExiste("El cliente con DNI " + cliente.getDni() + " ya existe.");
         }
-        clientes.put(cliente.getDni(), cliente);
+        clientes.put(dniStr, cliente);
     }
 
     public void eliminarCliente(String dni) throws ElementoNoEncontrado {
