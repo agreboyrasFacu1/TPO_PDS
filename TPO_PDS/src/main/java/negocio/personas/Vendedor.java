@@ -3,7 +3,7 @@ package negocio.personas;
 public class Vendedor extends Persona {
     private int Legajo;
 
-    public Vendedor(String nombre, String apellido, String documento, String correoElectronico, String telefono, int Legajo) {
+    public Vendedor(String nombre, String apellido, int documento, String correoElectronico, String telefono, int Legajo) {
         super(nombre, apellido, documento, correoElectronico, telefono);
         this.Legajo = Legajo;
     }
@@ -18,8 +18,8 @@ public class Vendedor extends Persona {
     public String getApellido() { return apellido; }
     public void setApellido(String apellido) { this.apellido = apellido; }
 
-    public String getDni() { return documento; }
-    public void setDni(String documento) { this.documento = documento; }
+    public int getDni() { return documento; }
+    public void setDni(int documento) { this.documento = documento; }
 
     public String getEmail() { return correoElectronico; }
     public void setEmail(String correoElectronico) { this.correoElectronico = correoElectronico; }

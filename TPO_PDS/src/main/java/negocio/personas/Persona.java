@@ -5,11 +5,11 @@ package negocio.personas;
 public abstract class Persona {
     protected String nombre;
     protected String apellido;
-    protected String documento;
+    protected int documento;
     protected String correoElectronico;
     protected String telefono;
 
-    public Persona(String nombre, String apellido, String documento, String correoElectronico, String telefono) {
+    public Persona(String nombre, String apellido, int documento, String correoElectronico, String telefono) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.documento = documento;
@@ -26,7 +26,7 @@ public abstract class Persona {
         return apellido;
     }
 
-    public String getDocumento() {
+    public int getDocumento() {
         return documento;
     }
 
@@ -46,7 +46,7 @@ public abstract class Persona {
         this.apellido = apellido;
     }
 
-    public void setDocumento(String documento) {
+    public void setDocumento(int documento) {
         this.documento = documento;
     }
 
