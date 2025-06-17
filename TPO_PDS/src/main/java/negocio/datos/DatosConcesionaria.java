@@ -4,14 +4,10 @@ import negocio.personas.Cliente;
 import negocio.personas.Vendedor;
 import negocio.pedidos.PedidoCompra;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatosConcesionaria implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class DatosConcesionaria{
     private static DatosConcesionaria instancia;
 
     private List<Cliente> clientes;

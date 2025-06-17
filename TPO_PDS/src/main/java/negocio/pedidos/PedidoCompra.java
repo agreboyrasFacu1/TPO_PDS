@@ -15,10 +15,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PedidoCompra implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class PedidoCompra {
     private int id;
     private Cliente cliente;
     private Vehiculo vehiculo;

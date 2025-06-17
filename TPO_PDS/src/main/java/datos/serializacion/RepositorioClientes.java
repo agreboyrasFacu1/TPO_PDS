@@ -1,18 +1,15 @@
 package datos.serializacion;
 
-import negocio.personas.Cliente;
-import excepciones.ClienteNoEncontradoException;
-import excepciones.ElementoYaExiste;
+import negocio.personas.*;
+import excepciones.*;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
-public class RepositorioClientes implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    private final HashMap<Integer, Cliente> clientes;
+public class RepositorioClientes{
+    private final HashMap<String, Cliente> clientes;
 
     public RepositorioClientes() {
         this.clientes = new HashMap<>();
@@ -25,17 +22,17 @@ public void agregarCliente(Cliente cliente) throws ElementoYaExiste {
         clientes.put(cliente.getDni(), cliente);
     }
 
-    public void eliminarCliente(int dni) throws ClienteNoEncontradoException {
+    public void eliminarCliente(String dni) throws ElementoNoEncontrado {
         if (!clientes.containsKey(dni)) {
-            throw new ClienteNoEncontradoException("El cliente con DNI " + dni + " no fue encontrado.");
+            throw new ElementoNoEncontrado("El cliente con DNI " + dni + " no fue encontrado.");
         }
         clientes.remove(dni);
     }
 
-    public Cliente buscarCliente(int dni) throws ClienteNoEncontradoException {
+    public Cliente buscarCliente(String dni) throws ElementoNoEncontrado {
         Cliente cliente = clientes.get(dni);
         if (cliente == null) {
-            throw new ClienteNoEncontradoException("El cliente con DNI " + dni + " no fue encontrado.");
+            throw new ElementoNoEncontrado("El cliente con DNI " + dni + " no fue encontrado.");
         }
         return cliente;
     }
@@ -44,7 +41,7 @@ public void agregarCliente(Cliente cliente) throws ElementoYaExiste {
         return new ArrayList<>(clientes.values());
     }
 
-    public boolean existeCliente(int dni) {
+    public boolean existeCliente(String dni) {
         return clientes.containsKey(dni);
     }
 

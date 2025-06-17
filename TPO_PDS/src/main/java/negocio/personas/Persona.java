@@ -1,9 +1,8 @@
 // Paquete: negocio
 package negocio.personas;
+ 
 
-import java.io.Serializable;
-
-public abstract class Persona implements Serializable {
+public abstract class Persona {
     protected String nombre;
     protected String apellido;
     protected String documento;

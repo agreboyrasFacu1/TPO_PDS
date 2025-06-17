@@ -5,10 +5,7 @@ import java.time.LocalDateTime;
 
 import negocio.state.StateArea;
 
-public class HistorialCambio implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class HistorialCambio{
     private LocalDateTime fecha;
     private StateArea estado;
     private String descripcion;

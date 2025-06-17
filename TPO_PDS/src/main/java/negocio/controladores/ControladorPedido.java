@@ -1,23 +1,17 @@
 package negocio.controladores;
 
-import negocio.pedidos.PedidoCompra;
-import negocio.pedidos.RepositorioPedidos;
-import negocio.pedidos.ValidadorPedidoCompra;
-import negocio.personas.Cliente;
-import negocio.personas.Vendedor;
-import negocio.vehiculos.Vehiculo;
-import negocio.vehiculos.ConfiguracionAd;
-import negocio.pago.FormaDePago;
-import excepciones.ClienteInvalidoException;
-import excepciones.EstadoInvalidoException;
-import excepciones.DuplicadoException;
+import negocio.pedidos.*;
+import negocio.personas.*;
+import negocio.vehiculos.*;
+import negocio.pago.*;
+import excepciones.*;
 
 public class ControladorPedido {
 
     private RepositorioPedidos repositorioPedidos;
 
-    public ControladorPedido(RepositorioPedidos repositorio) {
-        this.repositorioPedidos = repositorio;
+    public ControladorPedido() {
+        this.repositorioPedidos = new RepositorioPedido();
     }
 
     /**
