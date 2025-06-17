@@ -3,8 +3,7 @@ package negocio.vehiculos;
 import java.io.Serializable;
 import java.util.List;
 
-class ConfiguracionAd implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class ConfiguracionAd implements Serializable {
     private List<String> extras;
     private boolean garantiaExtendida;
     private List<String> accesorios;

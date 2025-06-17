@@ -1,4 +1,4 @@
-package negocio.facade;
+package negocio.perfil;
 
 import negocio.personas.Cliente;
 import negocio.vehiculos.ConfiguracionAd;

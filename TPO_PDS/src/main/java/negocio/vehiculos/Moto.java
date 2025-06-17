@@ -8,8 +8,8 @@ public class Moto extends Vehiculo {
 
     @Override
     public double getPrecioConImpuesto() {
-        // Impuesto del 3% para motos
-        return getPrecioBase() * 1.03;
+        // Provincial General: 5% / Adicional: 1%
+        return getPrecioBase() * 1.05 * 1.01;
     }
 }
 

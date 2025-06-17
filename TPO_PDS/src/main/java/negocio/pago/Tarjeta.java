@@ -1,11 +1,18 @@
 package negocio.pago;
 
+import excepciones.ValorInvalido;
+
 public class Tarjeta implements FormaDePago {
 
     private int cuotas;
 
-    public Tarjeta(int cuotas) {
-        this.cuotas = cuotas;
+    public Tarjeta(int cuotas) throws ValorInvalido {
+        if(cuotas==3||cuotas==6||cuotas==9||cuotas==12){
+            this.cuotas = cuotas;
+        }
+        else{
+            throw new ValorInvalido();
+        }
     }
 
     @Override
@@ -21,10 +28,6 @@ public class Tarjeta implements FormaDePago {
 
     public int getCuotas() {
         return cuotas;
-    }
-
-    public void setCuotas(int cuotas) {
-        this.cuotas = cuotas;
     }
 }
 

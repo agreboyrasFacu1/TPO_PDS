@@ -8,8 +8,8 @@ public class Auto extends Vehiculo {
 
     @Override
     public double getPrecioConImpuesto() {
-        // Impuesto del 5% para autos
-        return getPrecioBase() * 1.05;
+        // Impuesto Nacional: 21% / Provincial General: 5% / Adicional: 1%
+        return getPrecioBase() * 1.21 * 1.05 * 1.01;
     }
     
 }

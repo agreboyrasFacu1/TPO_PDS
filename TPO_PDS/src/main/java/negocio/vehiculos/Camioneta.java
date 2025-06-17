@@ -8,7 +8,7 @@ public class Camioneta extends Vehiculo {
 
     @Override
     public double getPrecioConImpuesto() {
-        // Impuesto del 8% para camionetas
-        return getPrecioBase() * 1.08;
+        // Impuesto Nacional: 10% / Provincial General: 5% / Adicional: 2%
+        return getPrecioBase() * 1.10 * 1.05 * 1.02;
     }
 }

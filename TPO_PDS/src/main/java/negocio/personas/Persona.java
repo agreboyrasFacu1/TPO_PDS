@@ -4,7 +4,6 @@ package negocio.personas;
 import java.io.Serializable;
 
 public abstract class Persona implements Serializable {
-    private static final long serialVersionUID = 1L;
     protected String nombre;
     protected String apellido;
     protected String documento;
@@ -18,9 +17,7 @@ public abstract class Persona implements Serializable {
         this.correoElectronico = correoElectronico;
         this.telefono = telefono;
     }
-    //Constructor Vacio 
-    public Persona() {
-    }
+    
     // Geters y Seters 
     public String getNombre() {
         return nombre;
@@ -61,7 +58,6 @@ public abstract class Persona implements Serializable {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-    public abstract String getNombreR();
     
 }
 

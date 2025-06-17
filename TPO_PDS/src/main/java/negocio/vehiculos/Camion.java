@@ -8,7 +8,7 @@ public class Camion extends Vehiculo {
 
     @Override
     public double getPrecioConImpuesto() {
-        // Impuesto del 10% para camiones
-        return getPrecioBase() * 1.10;
+        // Provincial General: 5% / Adicional: 2%
+        return getPrecioBase() * 1.05 * 1.02;
     }
 }

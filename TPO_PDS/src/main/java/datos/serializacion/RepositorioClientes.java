@@ -2,7 +2,7 @@ package datos.serializacion;
 
 import negocio.personas.Cliente;
 import excepciones.ClienteNoEncontradoException;
-import excepciones.ClienteYaExisteException;
+import excepciones.ElementoYaExiste;
 
 import java.io.*;
 import java.util.HashMap;
@@ -18,9 +18,9 @@ public class RepositorioClientes implements Serializable {
         this.clientes = new HashMap<>();
     }
 
-public void agregarCliente(Cliente cliente) throws ClienteYaExisteException {
+public void agregarCliente(Cliente cliente) throws ElementoYaExiste {
         if (clientes.containsKey(cliente.getDni())) {
-            throw new ClienteYaExisteException("El cliente con DNI " + cliente.getDni() + " ya existe.");
+            throw new ElementoYaExiste("El cliente con DNI " + cliente.getDni() + " ya existe.");
         }
         clientes.put(cliente.getDni(), cliente);
     }
