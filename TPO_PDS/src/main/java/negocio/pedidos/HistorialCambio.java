@@ -1,6 +1,5 @@
 package negocio.pedidos;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import negocio.state.StateArea;
