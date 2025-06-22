@@ -1,30 +1,40 @@
 package negocio.controladores;
 
-import negocio.pedidos.PedidoCompra;
-import negocio.personas.Cliente;
-import negocio.personas.Vendedor;
-import negocio.vehiculos.Vehiculo;
-import negocio.pago.FormaDePago;
-import negocio.vehiculos.ConfiguracionAd;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import datos.serializacion.RepositorioPedidos;
-import excepciones.*;
+import datos.serializacion.RepositorioVehiculos;
+import excepciones.ClienteInvalidoException;
+import excepciones.ElementoNoEncontrado;
+import excepciones.ElementoYaExiste;
+import excepciones.EstadoInvalidoException;
+import negocio.datos.DatosConcesionaria;
+import negocio.pago.FormaDePago;
+import negocio.pedidos.PedidoCompra;
+import negocio.personas.Cliente;
+import negocio.personas.Vendedor;
+import negocio.validadores.ValidadorPedidoCompra;
+import negocio.vehiculos.ConfiguracionAd;
+import negocio.vehiculos.SingletonCatalogo;
+import negocio.vehiculos.Vehiculo;
 
 public class ControladorPedido {
 
     private RepositorioPedidos repositorioPedidos;
+    private RepositorioVehiculos repositorioVehiculos;
 
     public ControladorPedido() {
         this.repositorioPedidos = new RepositorioPedidos();
+        this.repositorioVehiculos = new RepositorioVehiculos();
     }
 
     /**
      * Crea y registra un nuevo pedido después de validarlo.
      * 
      * @param cliente Cliente que realiza el pedido
-     * @param vendedor Vendedor encargado (si se requiere)
+     * @param vendedor Vendedor encargado (puede ser null para compras directas)
      * @param vehiculo Vehículo elegido
      * @param formaPago Forma de pago seleccionada
      * @param config Configuración adicional del vehículo
@@ -40,12 +50,13 @@ public class ControladorPedido {
             throws ElementoYaExiste, EstadoInvalidoException, ClienteInvalidoException, Exception {
 
         // Validar cliente
-        if (cliente == null || cliente.getDni() == null || cliente.getDni().isEmpty()) {
-            throw new ClienteInvalidoException("Cliente inválido o DNI vacío.");
+        if (cliente == null || cliente.getDni() <= 0) {
+            throw new ClienteInvalidoException("Cliente inválido o DNI inválido.");
         }
 
-        // Crear pedido con id 0 (o usar un generador en repositorio)
-        PedidoCompra nuevoPedido = new PedidoCompra(0, cliente, vehiculo, config, formaPago, null); // impuesto null? Mejor pasar impuesto válido
+        // Crear pedido con id generado automáticamente
+        int nuevoId = (int) (Math.random() * 10000); // ID simple para demo
+        PedidoCompra nuevoPedido = new PedidoCompra(nuevoId, cliente, vehiculo, config, formaPago);
 
         // Validar pedido (según tus reglas)
         ValidadorPedidoCompra.validarTodo(nuevoPedido);
@@ -54,6 +65,30 @@ public class ControladorPedido {
         this.repositorioPedidos.agregar(nuevoPedido);
 
         return nuevoPedido;
+    }
+
+    /**
+     * Registra una venta (método específico para vendedores)
+     */
+    public PedidoCompra registrarVenta(Cliente cliente, Vendedor vendedor, 
+                                      Vehiculo vehiculo, FormaDePago formaPago,
+                                      boolean garantiaExtendida, String[] extras) 
+            throws Exception {
+        
+        // Crear configuración adicional
+        ConfiguracionAd config = new ConfiguracionAd(
+            Arrays.asList(extras),
+            garantiaExtendida,
+            new ArrayList<>()
+        );
+
+        // Crear el pedido
+        PedidoCompra pedido = crearPedido(cliente, vendedor, vehiculo, formaPago, config);
+        
+        // Agregar a los datos de la concesionaria
+        DatosConcesionaria.getInstancia().agregarPedido(pedido);
+        
+        return pedido;
     }
 
     /**
@@ -71,8 +106,80 @@ public class ControladorPedido {
         pedido.avanzarEstado();
     }
 
+    /**
+     * Obtiene todos los pedidos
+     */
     public List<PedidoCompra> obtenerTodosPedidos() {
-    return repositorioPedidos.obtenerTodos();
-}
+        return repositorioPedidos.obtenerTodos();
+    }
 
+    /**
+     * Obtiene pedidos de un cliente específico
+     */
+    public List<PedidoCompra> obtenerPedidosCliente(int dniCliente) {
+        return repositorioPedidos.obtenerPedidosCliente(dniCliente);
+    }
+
+    /**
+     * Busca un pedido por ID
+     */
+    public PedidoCompra buscarPedido(int id) {
+        return repositorioPedidos.obtenerObj(id);
+    }
+
+    // ================ MÉTODOS PARA GESTIÓN DE VEHÍCULOS ================
+
+    /**
+     * Agrega un vehículo al catálogo
+     */
+    public void agregarVehiculo(Vehiculo vehiculo) throws ElementoYaExiste {
+        repositorioVehiculos.agregar(vehiculo, true); // Con validación de duplicados
+        repositorioVehiculos.guardar();
+    }
+
+    /**
+     * Elimina un vehículo del catálogo por modelo
+     */
+    public void eliminarVehiculo(String modelo) throws ElementoNoEncontrado {
+        repositorioVehiculos.eliminar(modelo);
+        repositorioVehiculos.guardar();
+    }
+
+    /**
+     * Busca un vehículo por modelo
+     */
+    public Vehiculo buscarVehiculo(String modelo) throws ElementoNoEncontrado {
+        return repositorioVehiculos.obtenerObj(modelo);
+    }
+
+    /**
+     * Obtiene todos los vehículos del catálogo
+     */
+    public List<Vehiculo> obtenerTodosVehiculos() {
+        // Usar el catálogo singleton que tiene los datos cargados
+        return SingletonCatalogo.getInstance().getVehiculos();
+    }
+
+    /**
+     * Obtiene vehículos disponibles para venta
+     */
+    public List<Vehiculo> obtenerVehiculosDisponibles() {
+        // Usar el catálogo singleton que tiene los datos cargados
+        return SingletonCatalogo.getInstance().getVehiculos();
+    }
+
+    /**
+     * Busca vehículos por marca
+     */
+    public List<Vehiculo> buscarVehiculosPorMarca(String marca) {
+        return repositorioVehiculos.buscarPorMarca(marca);
+    }
+
+    /**
+     * Guarda todos los datos
+     */
+    public void guardarTodo() {
+        repositorioPedidos.guardar();
+        repositorioVehiculos.guardar();
+    }
 }

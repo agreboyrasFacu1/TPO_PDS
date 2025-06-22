@@ -1,17 +1,17 @@
 package negocio.pedidos;
 
-import negocio.personas.Cliente;
-import negocio.vehiculos.Vehiculo;
-import negocio.vehiculos.ConfiguracionAd;
-import negocio.state.StateArea;
-import negocio.state.Ventas;
-import negocio.pago.FormaDePago;
-import negocio.notificaciones.Observer;
-import negocio.notificaciones.Autorizacion;
-import excepciones.EstadoInvalidoException;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import excepciones.EstadoInvalidoException;
+import negocio.notificaciones.Autorizacion;
+import negocio.notificaciones.Observer;
+import negocio.pago.FormaDePago;
+import negocio.personas.Cliente;
+import negocio.state.StateArea;
+import negocio.state.Ventas;
+import negocio.vehiculos.ConfiguracionAd;
+import negocio.vehiculos.Vehiculo;
 
 public class PedidoCompra {
     private int id;
@@ -61,14 +61,13 @@ public class PedidoCompra {
         agregarCambio("Se cambió la forma de pago");
     }
 
-    public double calcularTotal(double precioBase) {
-        double impuestoCalculado = impuesto.calcularImpuesto(precioBase);
-        double totalConImpuesto = precioBase + impuestoCalculado;
-        return formaPago.calcularTotal(totalConImpuesto);
+    public double calcularTotal() {
+        double precioConImpuestos = vehiculo.getPrecioConImpuesto();
+        return formaPago.calcularTotal(precioConImpuestos);
     }
 
     private void agregarCambio(String descripcion) {
-        historial.add(new HistorialCambio(estadoActual, descripcion));
+        historial.add(new HistorialCambio(estadoActual, descripcion, estadoActual.getNombreEstado()));
     }
 
     public void agregarObserver(Observer o) {

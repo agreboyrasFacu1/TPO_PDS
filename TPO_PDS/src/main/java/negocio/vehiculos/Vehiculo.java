@@ -70,5 +70,13 @@ public abstract class Vehiculo {
         return precioBase;
     }
     public abstract double getPrecioConImpuesto();
+
+    public String mostrarDetalleConPrecios() {
+        return "- Marca: " + marca + ", Modelo: " + modelo + 
+           ", Precio Base: $" + String.format("%.2f", precioBase) +
+           ", Precio con Impuestos: $" + String.format("%.2f", getPrecioConImpuesto()) +
+           ", Color: " + color + ", N° Chasis: " + nroChasis + 
+           ", N° Motor: " + nroMotor + ", Extras: " + extra.toString();
+    }
     
 }
