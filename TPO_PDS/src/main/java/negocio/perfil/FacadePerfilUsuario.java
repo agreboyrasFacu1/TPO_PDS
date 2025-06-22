@@ -1,7 +1,6 @@
 package negocio.perfil;
 
 import negocio.personas.Cliente;
-import negocio.vehiculos.ConfiguracionAd;
 import negocio.vehiculos.Vehiculo;
 
 public interface FacadePerfilUsuario {

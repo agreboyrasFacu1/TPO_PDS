@@ -6,6 +6,9 @@ import negocio.personas.Vendedor;
 import negocio.vehiculos.Vehiculo;
 import negocio.pago.FormaDePago;
 import negocio.vehiculos.ConfiguracionAd;
+
+import java.util.List;
+
 import datos.serializacion.RepositorioPedidos;
 import excepciones.*;
 
@@ -67,4 +70,9 @@ public class ControladorPedido {
     public void avanzarEstadoPedido(PedidoCompra pedido) throws EstadoInvalidoException {
         pedido.avanzarEstado();
     }
+
+    public List<PedidoCompra> obtenerTodosPedidos() {
+    return repositorioPedidos.obtenerTodos();
+}
+
 }
