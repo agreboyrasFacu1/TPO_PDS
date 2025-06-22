@@ -23,7 +23,7 @@ public class main {
             System.out.println("Seleccione su rol:");
             System.out.println("1. Administrador");
             System.out.println("2. Vendedor");
-            System.out.println("3. Comprador");
+            System.out.println("3. Cliente");
             System.out.println("0. Salir");
             System.out.print("Opción: ");
             String opcion = scanner.nextLine();
