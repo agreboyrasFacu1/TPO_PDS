@@ -45,6 +45,11 @@ public class FacadeConcesionaria {
         this.RepoClientes = new RepositorioClientes();
     }
 
+    // Método que faltaba para evitar error
+    public List<PedidoCompra> obtenerTodosPedidos() {
+        return controladorPedido.obtenerTodosPedidos();
+    }
+
     // Visualizar clientes
     public void visualizarClientes() {
         for(Cliente c : RepoClientes.obtenerTodos()){
@@ -235,7 +240,6 @@ public class FacadeConcesionaria {
         }
     }
 
-    // Método para que el usuario seleccione un estado para filtrar
     private StateArea seleccionarEstado(Scanner scanner) {
         System.out.println("Seleccione un estado para filtrar:");
         System.out.println("1. Ventas");
@@ -262,7 +266,6 @@ public class FacadeConcesionaria {
         }
     }
 
-    // Método para que el usuario ingrese un rango de fechas (fechaDesde y fechaHasta)
     private LocalDate[] seleccionarRangoFechas(Scanner scanner) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate desde = null;

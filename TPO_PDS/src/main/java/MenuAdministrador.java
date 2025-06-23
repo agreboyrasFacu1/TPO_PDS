@@ -1,12 +1,11 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Scanner;
 
 import excepciones.ElementoNoEncontrado;
-import excepciones.ElementoYaExiste;
 import negocio.controladores.ControladorPedido;
-import negocio.datos.DatosConcesionaria;
 import negocio.facade.FacadeConcesionaria;
 import negocio.pedidos.PedidoCompra;
 import negocio.personas.Cliente;
@@ -20,16 +19,12 @@ import negocio.state.Logistica;
 import negocio.state.Seguimiento;
 import negocio.state.StateArea;
 import negocio.state.Ventas;
-import negocio.vehiculos.Auto;
-import negocio.vehiculos.Camion;
-import negocio.vehiculos.Camioneta;
-import negocio.vehiculos.ConfiguracionAd;
-import negocio.vehiculos.Moto;
 import negocio.vehiculos.SingletonCatalogo;
 import negocio.vehiculos.Vehiculo;
 
 public class MenuAdministrador {
     private static FacadeConcesionaria concesionaria = new FacadeConcesionaria();
+    private static ControladorPedido controladorPedido = new ControladorPedido();
 
     public static void mostrarMenu(Scanner scanner) {
         boolean salir = false;
@@ -80,9 +75,13 @@ public class MenuAdministrador {
         }
     }
 
-
     private static void generarReporteAvanzado(Scanner scanner) {
         System.out.println("\n=== GENERADOR DE REPORTES AVANZADO ===");
+
+        // Obtener la lista de pedidos desde la fachada
+        List<PedidoCompra> pedidos = concesionaria.obtenerTodosPedidos();
+        GeneradorReporte generador = new GeneradorReporte(pedidos);
+
         // Filtro por estado
         System.out.println("¿Desea filtrar por estado? (s/n): ");
         if (scanner.nextLine().toLowerCase().startsWith("s")) {
@@ -139,7 +138,7 @@ public class MenuAdministrador {
             System.out.println("5. Guardar catálogo");
             System.out.println("0. Volver");
             System.out.print("Opción: ");
-            
+
             String opcion = scanner.nextLine();
             switch (opcion) {
                 case "1":
@@ -169,37 +168,36 @@ public class MenuAdministrador {
 
     private static void agregarVehiculo(Scanner scanner) {
         System.out.println("\n=== AGREGAR VEHÍCULO ===");
-        
-            System.out.print("Tipo de vehículo (1-Auto, 2-Camioneta, 3-Camión, 4-Moto): ");
-            int tipo = Integer.parseInt(scanner.nextLine());
-            
-            System.out.print("Marca: ");
-            String marca = scanner.nextLine();
-            
-            System.out.print("Modelo: ");
-            String modelo = scanner.nextLine();
-            
-            System.out.print("Precio base: ");
-            double precio = Double.parseDouble(scanner.nextLine());
-            
-            System.out.print("Color: ");
-            String color = scanner.nextLine();
-            
-            System.out.print("Número de chasis: ");
-            int nroChasis = Integer.parseInt(scanner.nextLine());
-            
-            System.out.print("Número de motor: ");
-            int nroMotor = Integer.parseInt(scanner.nextLine());
-            
-            concesionaria.agregarVehiculo(tipo, marca, modelo, color, nroChasis, nroMotor, precio);
-            
+
+        System.out.print("Tipo de vehículo (1-Auto, 2-Camioneta, 3-Camión, 4-Moto): ");
+        int tipo = Integer.parseInt(scanner.nextLine());
+
+        System.out.print("Marca: ");
+        String marca = scanner.nextLine();
+
+        System.out.print("Modelo: ");
+        String modelo = scanner.nextLine();
+
+        System.out.print("Precio base: ");
+        double precio = Double.parseDouble(scanner.nextLine());
+
+        System.out.print("Color: ");
+        String color = scanner.nextLine();
+
+        System.out.print("Número de chasis: ");
+        int nroChasis = Integer.parseInt(scanner.nextLine());
+
+        System.out.print("Número de motor: ");
+        int nroMotor = Integer.parseInt(scanner.nextLine());
+
+        concesionaria.agregarVehiculo(tipo, marca, modelo, color, nroChasis, nroMotor, precio);
     }
 
     private static void eliminarVehiculo(Scanner scanner) {
         System.out.println("\n=== ELIMINAR VEHÍCULO ===");
         System.out.print("Ingrese el modelo del vehículo a eliminar: ");
         String modelo = scanner.nextLine();
-        
+
         try {
             controladorPedido.eliminarVehiculo(modelo);
             SingletonCatalogo.getInstance().eliminarVehiculo(modelo);
@@ -215,7 +213,7 @@ public class MenuAdministrador {
         System.out.println("\n=== BUSCAR VEHÍCULO ===");
         System.out.print("Ingrese el modelo del vehículo: ");
         String modelo = scanner.nextLine();
-        
+
         try {
             Vehiculo vehiculo = controladorPedido.buscarVehiculo(modelo);
             System.out.println("Vehículo encontrado:");
@@ -225,6 +223,11 @@ public class MenuAdministrador {
         } catch (Exception e) {
             System.out.println("Error al buscar vehículo: " + e.getMessage());
         }
+    }
+
+    private static void verVehiculos() {
+        System.out.println("\n=== LISTA DE VEHÍCULOS ===");
+        SingletonCatalogo.getInstance().mostrarCatalogo();
     }
 
     private static StateArea seleccionarEstado(Scanner scanner) {
