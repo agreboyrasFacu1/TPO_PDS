@@ -36,11 +36,12 @@ import excepciones.ElementoYaExiste;
 
 public class FacadeConcesionaria {
     private ControladorPedido controladorPedido;
-    private SingletonCatalogo Catalogo = SingletonCatalogo.getInstance();
+    private SingletonCatalogo Catalogo;
     private RepositorioClientes RepoClientes;
 
     public FacadeConcesionaria() { 
         this.controladorPedido = new ControladorPedido();
+        this.Catalogo = SingletonCatalogo.getInstance();
         this.RepoClientes = new RepositorioClientes();
     }
 
@@ -53,7 +54,7 @@ public class FacadeConcesionaria {
 
     // Visualizar catálogo de vehículos
     public void visualizarVehiculos() { 
-        SingletonCatalogo.getInstance().mostrarCatalogo();
+        Catalogo.mostrarCatalogo();
     }
 
     // Visualizar pedidos usando controladorPedido
@@ -105,7 +106,7 @@ public class FacadeConcesionaria {
         System.out.println("Total de pedidos: " + pedidos.size());
         System.out.println("Total de clientes: " + datos.getClientes().size());
         System.out.println("Total de vendedores: " + datos.getVendedores().size());
-        System.out.println("Total de vehículos en catálogo: " + SingletonCatalogo.getInstance().getTotalVehiculos());
+        System.out.println("Total de vehículos en catálogo: " + Catalogo.getTotalVehiculos());
         
         // Calcular total de ventas
         double totalVentas = pedidos.stream()
@@ -165,7 +166,6 @@ public class FacadeConcesionaria {
 
     public void agregarVehiculo(int tipo, String marca, String modelo, String color, int nroChasis, int nroMotor, double precio) {
         try {
-            // Configuración básica
             ConfiguracionAd config = new ConfiguracionAd(
                 java.util.Arrays.asList("Configuración estándar"),
                 false,
@@ -190,8 +190,7 @@ public class FacadeConcesionaria {
                     return;
             }
             
-            // Agregar al controlador Y al singleton
-            SingletonCatalogo.getInstance().agregarVehiculo(vehiculo);
+            Catalogo.agregarVehiculo(vehiculo);
             
             System.out.println("Vehículo agregado exitosamente al catálogo.");
             System.out.println("Detalles: " + vehiculo.mostrarDetalleConPrecios());
@@ -211,7 +210,7 @@ public class FacadeConcesionaria {
         
         try {
             controladorPedido.eliminarVehiculo(modelo);
-            SingletonCatalogo.getInstance().eliminarVehiculo(modelo);
+            Catalogo.eliminarVehiculo(modelo);
             System.out.println("Vehículo eliminado exitosamente.");
         } catch (ElementoNoEncontrado e) {
             System.out.println("" + e.getMessage());
@@ -234,5 +233,57 @@ public class FacadeConcesionaria {
         } catch (Exception e) {
             System.out.println("Error al buscar vehículo: " + e.getMessage());
         }
+    }
+
+    // Método para que el usuario seleccione un estado para filtrar
+    private StateArea seleccionarEstado(Scanner scanner) {
+        System.out.println("Seleccione un estado para filtrar:");
+        System.out.println("1. Ventas");
+        System.out.println("2. Cobranzas");
+        System.out.println("3. Impuestos");
+        System.out.println("4. Logística");
+        System.out.println("5. Embarque");
+        System.out.println("6. Entrega");
+        System.out.println("7. Seguimiento");
+        System.out.print("Ingrese opción: ");
+
+        String opcion = scanner.nextLine();
+        switch (opcion) {
+            case "1": return new Ventas();
+            case "2": return new Cobranzas();
+            case "3": return new Impuestos();
+            case "4": return new Logistica();
+            case "5": return new Embarque();
+            case "6": return new Entrega();
+            case "7": return new Seguimiento();
+            default:
+                System.out.println("Opción inválida. No se aplicará filtro por estado.");
+                return null;
+        }
+    }
+
+    // Método para que el usuario ingrese un rango de fechas (fechaDesde y fechaHasta)
+    private LocalDate[] seleccionarRangoFechas(Scanner scanner) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate desde = null;
+        LocalDate hasta = null;
+
+        try {
+            System.out.print("Ingrese fecha desde (YYYY-MM-DD) o deje vacío para omitir: ");
+            String desdeStr = scanner.nextLine();
+            if (!desdeStr.isBlank()) {
+                desde = LocalDate.parse(desdeStr, formatter);
+            }
+
+            System.out.print("Ingrese fecha hasta (YYYY-MM-DD) o deje vacío para omitir: ");
+            String hastaStr = scanner.nextLine();
+            if (!hastaStr.isBlank()) {
+                hasta = LocalDate.parse(hastaStr, formatter);
+            }
+        } catch (DateTimeParseException e) {
+            System.out.println("Formato de fecha inválido. No se aplicará filtro por fechas.");
+        }
+
+        return new LocalDate[] {desde, hasta};
     }
 }
