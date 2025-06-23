@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import excepciones.ElementoYaExiste;
 import negocio.pedidos.PedidoCompra; 
 
 public class RepositorioPedidos implements Repositorio<PedidoCompra> {
@@ -20,8 +21,13 @@ public class RepositorioPedidos implements Repositorio<PedidoCompra> {
     }
 
     @Override
-    public void agregar(PedidoCompra pedido) {
-        RepoPedidos.add(pedido);
+    public void agregar(PedidoCompra pedido) throws ElementoYaExiste{
+        if(!existePedido(pedido.getId())){
+            RepoPedidos.add(pedido);
+        }else{
+            throw new ElementoYaExiste("El pedido");
+        }
+        
     }
 
     @Override
@@ -59,6 +65,10 @@ public class RepositorioPedidos implements Repositorio<PedidoCompra> {
             e.printStackTrace();
         }
     }
+
+    public boolean existePedido(int id) {
+        return RepoPedidos.stream().anyMatch(c -> c.getId() == id);
+    } 
 
 
 }
