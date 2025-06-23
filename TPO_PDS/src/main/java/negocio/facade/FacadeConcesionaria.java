@@ -47,27 +47,6 @@ public class FacadeConcesionaria {
             return null;
         }
     }
-
-    // Iniciar sesión (Pendiente implementar)
-    public void iniciarSesion(String documento, String correo) {
-        // TODO: implementar login
-    }
-
-    // Elegir vehículo (Pendiente implementar)
-    public void elegirVehiculo(String marca, String modelo, String color, String nroChasis, int nroMotor, Vehiculo v) {
-        // TODO: implementar lógica de selección vehículo
-    }
-
-    // Agregar extra (Pendiente implementar)
-    public void agregarExtra(String extra) {
-        // TODO: implementar agregar extra a configuración
-    }
-
-    // Definir forma de pago (Pendiente implementar)
-    public void definirFormaDePago() {
-        // TODO: implementar definición de forma de pago
-    }
-
     // Crear pedido y delegar al controlador
     public PedidoCompra comprarVehiculo(Cliente cliente, Vendedor vendedor, Vehiculo vehiculo, FormaDePago formaPago, ConfiguracionAd config) throws Exception {
         return controladorPedido.crearPedido(cliente, vendedor, vehiculo, formaPago, config);
