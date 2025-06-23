@@ -1,5 +1,6 @@
 package negocio.pedidos;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +12,9 @@ import negocio.personas.Cliente;
 import negocio.state.StateArea;
 import negocio.state.Ventas;
 import negocio.vehiculos.ConfiguracionAd;
-import negocio.vehiculos.Vehiculo;
+import negocio.vehiculos.Vehiculo; 
 
-public class PedidoCompra {
+public class PedidoCompra implements Serializable {
     private int id;
     private Cliente cliente;
     private Vehiculo vehiculo;

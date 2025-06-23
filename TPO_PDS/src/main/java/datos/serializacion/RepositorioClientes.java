@@ -1,61 +1,55 @@
 package datos.serializacion;
 
-import negocio.personas.*;
-import excepciones.*;
+import negocio.personas.*; 
 
-import java.io.*;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
-public class RepositorioClientes{
-    private final HashMap<String, Cliente> clientes;
+public class RepositorioClientes implements Repositorio<Cliente> {
+    private List<Cliente> listaClientes;
+    private final String nombreArchivo = "clientes.dat";
 
     public RepositorioClientes() {
-        this.clientes = new HashMap<>();
-    }
-
-public void agregarCliente(Cliente cliente) throws ElementoYaExiste {
-        String dniStr = String.valueOf(cliente.getDni());
-        if (clientes.containsKey(dniStr)) {
-            throw new ElementoYaExiste("El cliente con DNI " + cliente.getDni() + " ya existe.");
-        }
-        clientes.put(dniStr, cliente);
-    }
-
-    public void eliminarCliente(String dni) throws ElementoNoEncontrado {
-        if (!clientes.containsKey(dni)) {
-            throw new ElementoNoEncontrado("El cliente con DNI " + dni + " no fue encontrado.");
-        }
-        clientes.remove(dni);
-    }
-
-    public Cliente buscarCliente(String dni) throws ElementoNoEncontrado {
-        Cliente cliente = clientes.get(dni);
-        if (cliente == null) {
-            throw new ElementoNoEncontrado("El cliente con DNI " + dni + " no fue encontrado.");
-        }
-        return cliente;
-    }
-
-    public List<Cliente> listarClientes() {
-        return new ArrayList<>(clientes.values());
-    }
-
-    public boolean existeCliente(String dni) {
-        return clientes.containsKey(dni);
-    }
-
-    // Métodos de serialización para persistir
-    public void guardarRepositorio(String ruta) throws IOException {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ruta))) {
-            oos.writeObject(this);
+        ManejadorPersistencia<Cliente> manejador = new ManejadorPersistencia<>();
+        try {
+            this.listaClientes = manejador.cargarLista(nombreArchivo);
+        } catch (Exception e) {
+            this.listaClientes = new ArrayList<>();
         }
     }
 
-    public static RepositorioClientes cargarRepositorio(String ruta) throws IOException, ClassNotFoundException {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ruta))) {
-            return (RepositorioClientes) ois.readObject();
+    @Override
+    public void agregar(Cliente cliente){
+        listaClientes.add(cliente);
+    }
+
+    @Override
+    public void eliminar(int id) {
+        listaClientes.removeIf(c -> c.getId() == id);
+    }
+
+    @Override
+    public Cliente obtenerObj(int id) { 
+        for (Cliente c : listaClientes) {
+            if (c.getId() == id) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<Cliente> obtenerTodos() {
+        return new ArrayList<>(listaClientes);
+    }
+
+    @Override
+    public void guardar() {
+        ManejadorPersistencia<Cliente> manejador = new ManejadorPersistencia<>();
+        try {
+            manejador.guardarLista(nombreArchivo, listaClientes);
+        } catch (Exception e) {
+            e.printStackTrace(); 
         }
     }
 }

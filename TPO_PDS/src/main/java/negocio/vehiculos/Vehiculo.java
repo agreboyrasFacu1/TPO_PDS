@@ -1,9 +1,10 @@
 package negocio.vehiculos;
 
+import java.io.Serializable;
 
-public abstract class Vehiculo {
+public abstract class Vehiculo implements Serializable {
     protected String marca;
-    protected String modelo;
+    protected String modelo; 
     protected double precioBase;
     protected String color;
     protected int nroChasis;
