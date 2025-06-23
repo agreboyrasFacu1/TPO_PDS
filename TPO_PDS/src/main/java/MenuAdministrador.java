@@ -7,6 +7,7 @@ import excepciones.ElementoNoEncontrado;
 import excepciones.ElementoYaExiste;
 import negocio.controladores.ControladorPedido;
 import negocio.datos.DatosConcesionaria;
+import negocio.facade.FacadeConcesionaria;
 import negocio.pedidos.PedidoCompra;
 import negocio.personas.Cliente;
 import negocio.reportes.GeneradorReporte;
@@ -28,7 +29,7 @@ import negocio.vehiculos.SingletonCatalogo;
 import negocio.vehiculos.Vehiculo;
 
 public class MenuAdministrador {
-    private static ControladorPedido controladorPedido = new ControladorPedido();
+    private static FacadeConcesionaria concesionaria = new FacadeConcesionaria();
 
     public static void mostrarMenu(Scanner scanner) {
         boolean salir = false;
@@ -46,19 +47,23 @@ public class MenuAdministrador {
             String opcion = scanner.nextLine();
             switch (opcion) {
                 case "1":
-                    verClientes();
+                    System.out.println("\n=== LISTA DE CLIENTES ===");
+                    concesionaria.visualizarClientes();
                     break;
                 case "2":
-                    verVehiculos();
+                    concesionaria.visualizarVehiculos();
                     break;
                 case "3":
-                    verPedidos();
+                    System.out.println("\n=== LISTA DE PEDIDOS ===");
+                    concesionaria.visualizarPedidos();
                     break;
                 case "4":
-                    generarReporte();
+                    System.out.println("\n=== REPORTE BÁSICO ===");
+                    concesionaria.generarReporte();
                     break;
                 case "5":
-                    verDetallesImpuestos();
+                    System.out.println("\n=== DETALLES DE IMPUESTOS POR VEHÍCULO ===");
+                    concesionaria.verDetallesImpuestos();
                     break;
                 case "6":
                     generarReporteAvanzado(scanner);
@@ -74,73 +79,10 @@ public class MenuAdministrador {
             }
         }
     }
-    
-    private static void verClientes() {
-        System.out.println("\n=== LISTA DE CLIENTES ===");
-        DatosConcesionaria datos = DatosConcesionaria.getInstancia();
-        for (Cliente cliente : datos.getClientes()) {
-            System.out.println(cliente.toString());
-        }
-    }
-    
-    private static void verVehiculos() {
-        System.out.println("\n=== CATÁLOGO DE VEHÍCULOS ===");
-        SingletonCatalogo.getInstance().visualizarParaAdmin();
-    }
-    
-    private static void verPedidos() {
-        System.out.println("\n=== LISTA DE PEDIDOS ===");
-        java.util.List<PedidoCompra> pedidos = controladorPedido.obtenerTodosPedidos();
-        for (PedidoCompra pedido : pedidos) {
-            System.out.println("Pedido #" + pedido.getId() + " - Cliente: " + 
-                             pedido.getCliente().getNombre() + " - Estado: " + 
-                             pedido.getEstadoActual().getNombreEstado() +
-                             " - Total: $" + String.format("%.2f", pedido.calcularTotal()));
-        }
-    }
-    
-    private static void generarReporte() {
-        System.out.println("\n=== REPORTE BÁSICO ===");
-        DatosConcesionaria datos = DatosConcesionaria.getInstancia();
-        java.util.List<PedidoCompra> pedidos = controladorPedido.obtenerTodosPedidos();
-        
-        System.out.println("Total de pedidos: " + pedidos.size());
-        System.out.println("Total de clientes: " + datos.getClientes().size());
-        System.out.println("Total de vendedores: " + datos.getVendedores().size());
-        System.out.println("Total de vehículos en catálogo: " + SingletonCatalogo.getInstance().getTotalVehiculos());
-        
-        // Calcular total de ventas
-        double totalVentas = pedidos.stream()
-            .mapToDouble(PedidoCompra::calcularTotal)
-            .sum();
-        System.out.println("Total en ventas: $" + String.format("%.2f", totalVentas));
-    }
 
-    private static void verDetallesImpuestos() {
-        System.out.println("\n=== DETALLES DE IMPUESTOS POR VEHÍCULO ===");
-        java.util.List<Vehiculo> vehiculos = controladorPedido.obtenerTodosVehiculos();
-        for (Vehiculo vehiculo : vehiculos) {
-            double precioBase = vehiculo.getPrecioBase();
-            double precioConImpuestos = vehiculo.getPrecioConImpuesto();
-            double impuestos = precioConImpuestos - precioBase;
-            double porcentajeImpuestos = (impuestos / precioBase) * 100;
-        
-            System.out.println(vehiculo.getClass().getSimpleName() + " - " + 
-                         vehiculo.getMarca() + " " + vehiculo.getModelo());
-            System.out.println("  Precio Base: $" + String.format("%.2f", precioBase));
-            System.out.println("  Impuestos: $" + String.format("%.2f", impuestos) + 
-                         " (" + String.format("%.1f", porcentajeImpuestos) + "%)");
-            System.out.println("  Precio Final: $" + String.format("%.2f", precioConImpuestos));
-            System.out.println();
-        }
-    }
 
     private static void generarReporteAvanzado(Scanner scanner) {
         System.out.println("\n=== GENERADOR DE REPORTES AVANZADO ===");
-        
-        java.util.List<PedidoCompra> pedidos = controladorPedido.obtenerTodosPedidos();
-        GeneradorReporte generador = new GeneradorReporte(pedidos);
-
         // Filtro por estado
         System.out.println("¿Desea filtrar por estado? (s/n): ");
         if (scanner.nextLine().toLowerCase().startsWith("s")) {
@@ -228,7 +170,6 @@ public class MenuAdministrador {
     private static void agregarVehiculo(Scanner scanner) {
         System.out.println("\n=== AGREGAR VEHÍCULO ===");
         
-        try {
             System.out.print("Tipo de vehículo (1-Auto, 2-Camioneta, 3-Camión, 4-Moto): ");
             int tipo = Integer.parseInt(scanner.nextLine());
             
@@ -250,46 +191,8 @@ public class MenuAdministrador {
             System.out.print("Número de motor: ");
             int nroMotor = Integer.parseInt(scanner.nextLine());
             
-            // Configuración básica
-            ConfiguracionAd config = new ConfiguracionAd(
-                java.util.Arrays.asList("Configuración estándar"),
-                false,
-                new java.util.ArrayList<>()
-            );
+            concesionaria.agregarVehiculo(tipo, marca, modelo, color, nroChasis, nroMotor, precio);
             
-            Vehiculo vehiculo = null;
-            switch (tipo) {
-                case 1:
-                    vehiculo = new Auto(marca, modelo, precio, color, nroChasis, nroMotor, config);
-                    break;
-                case 2:
-                    vehiculo = new Camioneta(marca, modelo, precio, color, nroChasis, nroMotor, config);
-                    break;
-                case 3:
-                    vehiculo = new Camion(marca, modelo, precio, color, nroChasis, nroMotor, config);
-                    break;
-                case 4:
-                    vehiculo = new Moto(marca, modelo, precio, color, nroChasis, nroMotor, config);
-                    break;
-                default:
-                    System.out.println("Tipo de vehículo inválido.");
-                    return;
-            }
-            
-            // Agregar al controlador Y al singleton
-            controladorPedido.agregarVehiculo(vehiculo);
-            SingletonCatalogo.getInstance().agregarVehiculo(vehiculo);
-            
-            System.out.println("Vehículo agregado exitosamente al catálogo.");
-            System.out.println("Detalles: " + vehiculo.mostrarDetalleConPrecios());
-            
-        } catch (NumberFormatException e) {
-            System.out.println("Error en el formato de los datos numéricos.");
-        } catch (ElementoYaExiste e) {
-            System.out.println("Error " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Error al agregar vehículo: " + e.getMessage());
-        }
     }
 
     private static void eliminarVehiculo(Scanner scanner) {

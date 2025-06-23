@@ -23,36 +23,10 @@ public class SingletonCatalogo {
     }
 
     public void mostrarCatalogo() {
-        List<Vehiculo> vehiculos = repositorioVehiculos.obtenerTodos();
-        for (Vehiculo v : vehiculos) {
-            System.out.println(v.mostrarDetalle());
-        }
-    }
-
-    public void visualizarParaAdmin() {
-        System.out.println("== Catálogo para ADMINISTRADOR ==");
+        System.out.println("\n=== CATÁLOGO DE VEHÍCULOS ===");
         List<Vehiculo> vehiculos = repositorioVehiculos.obtenerTodos();
         for (Vehiculo v : vehiculos) {
             System.out.println(v.mostrarDetalleConPrecios()); 
-        }
-    }
-
-    public void visualizarParaVendedor() {
-        System.out.println("== Catálogo para VENDEDOR ==");
-        List<Vehiculo> vehiculos = repositorioVehiculos.obtenerVehiculosDisponibles();
-        for (Vehiculo v : vehiculos) {
-            System.out.println("Modelo: " + v.getModelo() + 
-                         ", Precio Base: $" + String.format("%.2f", v.getPrecioBase()) +
-                         ", Precio Final: $" + String.format("%.2f", v.getPrecioConImpuesto()));
-        }
-    }
-
-    public void visualizarParaCliente() {
-        System.out.println("== Catálogo para CLIENTE ==");
-        List<Vehiculo> vehiculos = repositorioVehiculos.obtenerVehiculosDisponibles();
-        for (Vehiculo v : vehiculos) {
-            System.out.println("Marca: " + v.getMarca() + ", Modelo: " + v.getModelo() +
-                         ", Precio: $" + String.format("%.2f", v.getPrecioConImpuesto()));
         }
     }
 
