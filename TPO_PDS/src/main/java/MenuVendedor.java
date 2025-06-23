@@ -4,6 +4,7 @@ import java.util.Scanner;
 import excepciones.ValorInvalido;
 import negocio.controladores.ControladorPedido;
 import negocio.datos.DatosConcesionaria;
+import negocio.facade.FacadeConcesionaria;
 import negocio.pago.Contado;
 import negocio.pago.FormaDePago;
 import negocio.pago.Tarjeta;
@@ -17,6 +18,7 @@ import negocio.vehiculos.Vehiculo;
 public class MenuVendedor {
     private static Vendedor vendedorActual = null;
     private static ControladorPedido controladorPedido = new ControladorPedido();
+    private static FacadeConcesionaria concesionaria = new FacadeConcesionaria(); // 
 
     public static void mostrarMenu(Scanner scanner) {
         // Verificar si hay sesión iniciada, si no, forzar login
@@ -67,7 +69,9 @@ public class MenuVendedor {
     
     private static void verVehiculos() {
         System.out.println("\n=== VEHÍCULOS DISPONIBLES ===");
-        SingletonCatalogo.getInstance().visualizarParaVendedor();
+        //SingletonCatalogo.getInstance().visualizarParaVendedor();
+        concesionaria.visualizarVehiculos(); //
+        
     }
 
     private static boolean iniciarSesionVendedor(Scanner scanner) {
