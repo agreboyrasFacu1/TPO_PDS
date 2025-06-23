@@ -4,6 +4,7 @@ import java.util.Scanner;
 import excepciones.ValorInvalido;
 import negocio.controladores.ControladorPedido;
 import negocio.datos.DatosConcesionaria;
+import negocio.facade.FacadeConcesionaria;
 import negocio.pago.Contado;
 import negocio.pago.FormaDePago;
 import negocio.pago.Tarjeta;
@@ -16,6 +17,7 @@ import negocio.vehiculos.Vehiculo;
 public class MenuCliente {
     private static Cliente clienteActual = null;
     private static ControladorPedido controladorPedido = new ControladorPedido();
+    private static FacadeConcesionaria concesionaria = new FacadeConcesionaria(); // 
 
     public static void mostrarMenu(Scanner scanner) {
         boolean salir = false;
@@ -92,7 +94,8 @@ public class MenuCliente {
 
     private static void verCatalogo() {
         System.out.println("\n=== CATÁLOGO DE VEHÍCULOS ===");
-        SingletonCatalogo.getInstance().visualizarParaCliente();
+        //SingletonCatalogo.getInstance().visualizarParaCliente();
+        concesionaria.visualizarVehiculos(); //
     }
 
     private static void iniciarSesionCliente(Scanner scanner) {
