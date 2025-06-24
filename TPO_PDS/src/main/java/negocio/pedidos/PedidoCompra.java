@@ -8,15 +8,15 @@ import excepciones.EstadoInvalidoException;
 import negocio.notificaciones.Autorizacion;
 import negocio.notificaciones.Observer;
 import negocio.pago.FormaDePago;
-import negocio.personas.Cliente;
-import negocio.state.StateArea;
-import negocio.state.Ventas;
+import negocio.personas.*;
+import negocio.state.*;
 import negocio.vehiculos.ConfiguracionAd;
 import negocio.vehiculos.Vehiculo; 
 
 public class PedidoCompra implements Serializable {
     private int id;
     private Cliente cliente;
+    private Vendedor vendedor;
     private Vehiculo vehiculo;
     private ConfiguracionAd configuracion;
     private FormaDePago formaPago;
@@ -24,10 +24,11 @@ public class PedidoCompra implements Serializable {
     private List<HistorialCambio> historial;
     private List<Observer> observadores;
 
-    public PedidoCompra(int id, Cliente cliente, Vehiculo vehiculo, ConfiguracionAd configuracion,
+    public PedidoCompra(int id, Cliente cliente, Vendedor vendedor, Vehiculo vehiculo, ConfiguracionAd configuracion,
                         FormaDePago formaPago) {
         this.id = id;
         this.cliente = cliente;
+        this.vendedor = vendedor;
         this.vehiculo = vehiculo;
         this.configuracion = configuracion;
         this.formaPago = formaPago;
@@ -93,6 +94,10 @@ public class PedidoCompra implements Serializable {
 
     public Cliente getCliente() {
         return cliente;
+    }
+
+    public Vendedor getVendedor() {
+        return vendedor;
     }
 
     public Vehiculo getVehiculo() {

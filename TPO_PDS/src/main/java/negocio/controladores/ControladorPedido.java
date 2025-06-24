@@ -40,9 +40,9 @@ public class ControladorPedido {
         }
 
         int nuevoId = (int) (Math.random() * 10000);
-        PedidoCompra nuevoPedido = new PedidoCompra(nuevoId, cliente, vehiculo, config, formaPago);
+        PedidoCompra nuevoPedido = new PedidoCompra(nuevoId, cliente, vendedor, vehiculo, config, formaPago);
 
-        ValidadorPedidoCompra.validarTodo(nuevoPedido);
+        ValidadorPedidoCompra.validarTodo(nuevoPedido); 
 
         this.repositorioPedidos.agregar(nuevoPedido);
 
