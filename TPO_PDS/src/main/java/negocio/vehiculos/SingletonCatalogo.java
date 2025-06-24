@@ -85,4 +85,9 @@ public class SingletonCatalogo {
     public int getTotalVehiculos() {
         return repositorioVehiculos.getTotalVehiculos();
     }
+
+    // Método para buscar vehículos por marca
+    public List<Vehiculo> buscarVehiculosPorMarca(String marca) {
+        return repositorioVehiculos.buscarPorMarca(marca);
+    }
 }
