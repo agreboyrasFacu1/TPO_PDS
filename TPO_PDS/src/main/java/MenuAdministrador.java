@@ -8,7 +8,6 @@ import excepciones.ElementoNoEncontrado;
 import negocio.controladores.ControladorPedido;
 import negocio.facade.FacadeConcesionaria;
 import negocio.pedidos.PedidoCompra;
-import negocio.personas.Cliente;
 import negocio.reportes.GeneradorReporte;
 import negocio.reportes.Reporte;
 import negocio.state.Cobranzas;

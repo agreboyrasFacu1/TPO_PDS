@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Scanner;
 
 import negocio.controladores.ControladorPedido;
 import negocio.datos.DatosConcesionaria;
@@ -45,24 +44,21 @@ public class FacadeConcesionaria {
         this.RepoClientes = new RepositorioClientes();
     }
 
-    // Método que faltaba para evitar error
+    // Métodos públicos para listar datos
     public List<PedidoCompra> obtenerTodosPedidos() {
         return controladorPedido.obtenerTodosPedidos();
     }
 
-    // Visualizar clientes
     public void visualizarClientes() {
         for(Cliente c : RepoClientes.obtenerTodos()){
             System.out.println(c.toString());
         }
     }    
 
-    // Visualizar catálogo de vehículos
     public void visualizarVehiculos() { 
         Catalogo.mostrarCatalogo();
     }
 
-    // Visualizar pedidos usando controladorPedido
     public void visualizarPedidos() {
         List<PedidoCompra> pedidos = controladorPedido.obtenerTodosPedidos();
         for (PedidoCompra pedido : pedidos) {
@@ -73,12 +69,12 @@ public class FacadeConcesionaria {
         }
     }
 
-    // Crear pedido y delegar al controlador
+    // Crear pedido
     public PedidoCompra comprarVehiculo(Cliente cliente, Vendedor vendedor, Vehiculo vehiculo, FormaDePago formaPago, ConfiguracionAd config) throws Exception {
         return controladorPedido.crearPedido(cliente, vendedor, vehiculo, formaPago, config);
     }
 
-    // Obtener historial del pedido actual
+    // Obtener historial de cambios de pedido
     public List<HistorialCambio> reportes(PedidoCompra pedido) {
         if(pedido != null) {
             return pedido.getHistorial();
@@ -113,18 +109,16 @@ public class FacadeConcesionaria {
         System.out.println("Total de vendedores: " + datos.getVendedores().size());
         System.out.println("Total de vehículos en catálogo: " + Catalogo.getTotalVehiculos());
         
-        // Calcular total de ventas
         double totalVentas = pedidos.stream()
             .mapToDouble(PedidoCompra::calcularTotal)
             .sum();
         System.out.println("Total en ventas: $" + String.format("%.2f", totalVentas));
     }
 
-    public void generarReporteAvanzado(Scanner scanner) {
+    public void generarReporteAvanzado(java.util.Scanner scanner) {
         List<PedidoCompra> pedidos = controladorPedido.obtenerTodosPedidos();
         GeneradorReporte generador = new GeneradorReporte(pedidos);
 
-        // Filtro por estado
         System.out.println("¿Desea filtrar por estado? (s/n): ");
         if (scanner.nextLine().toLowerCase().startsWith("s")) {
             StateArea estado = seleccionarEstado(scanner);
@@ -133,7 +127,6 @@ public class FacadeConcesionaria {
             }
         }
 
-        // Filtro por fechas
         System.out.println("¿Desea filtrar por fechas? (s/n): ");
         if (scanner.nextLine().toLowerCase().startsWith("s")) {
             LocalDate[] fechas = seleccionarRangoFechas(scanner);
@@ -142,10 +135,8 @@ public class FacadeConcesionaria {
             }
         }
 
-        // Generar reporte
         Reporte reporte = generador.generar();
 
-        // Mostrar opciones de salida
         System.out.println("\n¿Cómo desea ver el reporte?");
         System.out.println("1. Mostrar en pantalla");
         System.out.println("2. Exportar a CSV");
@@ -208,40 +199,18 @@ public class FacadeConcesionaria {
         }
     }
 
-    private void eliminarVehiculo(Scanner scanner) {
-        System.out.println("\n=== ELIMINAR VEHÍCULO ===");
-        System.out.print("Ingrese el modelo del vehículo a eliminar: ");
-        String modelo = scanner.nextLine();
-        
-        try {
-            controladorPedido.eliminarVehiculo(modelo);
-            System.out.println("Vehículo eliminado exitosamente.");
-        } catch (ElementoNoEncontrado e) {
-            System.out.println("Error: " + e.getMessage());
-        } catch (IllegalStateException e) {
-            System.out.println("No se puede eliminar: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Error al eliminar vehículo: " + e.getMessage());
-        }
+    // Método público para eliminar vehículo
+    public void eliminarVehiculo(String modelo) throws ElementoNoEncontrado, Exception {
+        controladorPedido.eliminarVehiculo(modelo);
     }
 
-    private void buscarVehiculo(Scanner scanner) {
-        System.out.println("\n=== BUSCAR VEHÍCULO ===");
-        System.out.print("Ingrese el modelo del vehículo: ");
-        String modelo = scanner.nextLine();
-        
-        try {
-            Vehiculo vehiculo = controladorPedido.buscarVehiculo(modelo);
-            System.out.println("Vehículo encontrado:");
-            System.out.println(vehiculo.mostrarDetalleConPrecios());
-        } catch (ElementoNoEncontrado e) {
-            System.out.println("Error: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Error al buscar vehículo: " + e.getMessage());
-        }
+    public Vehiculo buscarVehiculo(String modelo) throws ElementoNoEncontrado {
+        return controladorPedido.buscarVehiculo(modelo);
     }
 
-    private StateArea seleccionarEstado(Scanner scanner) {
+    // Métodos privados para seleccionar estado y rango fechas usados internamente
+
+    private StateArea seleccionarEstado(java.util.Scanner scanner) {
         System.out.println("Seleccione un estado para filtrar:");
         System.out.println("1. Ventas");
         System.out.println("2. Cobranzas");
@@ -267,7 +236,7 @@ public class FacadeConcesionaria {
         }
     }
 
-    private LocalDate[] seleccionarRangoFechas(Scanner scanner) {
+    private LocalDate[] seleccionarRangoFechas(java.util.Scanner scanner) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate desde = null;
         LocalDate hasta = null;

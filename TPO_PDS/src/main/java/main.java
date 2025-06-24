@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 import negocio.datos.GeneradorDatosPrueba;
 
-public class main {
+public class Main {
     public static final String NOMBRE_CONCESIONARIA = "Concesionaria Vehiculos S.A.";
     public static final String CUIT_CONCESIONARIA = "30-23456789-9";
 
