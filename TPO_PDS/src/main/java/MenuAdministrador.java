@@ -10,14 +10,7 @@ import negocio.facade.FacadeConcesionaria;
 import negocio.pedidos.PedidoCompra;
 import negocio.reportes.GeneradorReporte;
 import negocio.reportes.Reporte;
-import negocio.state.Cobranzas;
-import negocio.state.Embarque;
-import negocio.state.Entrega;
-import negocio.state.Impuestos;
-import negocio.state.Logistica;
-import negocio.state.Seguimiento;
-import negocio.state.StateArea;
-import negocio.state.Ventas;
+import negocio.state.*;
 import negocio.vehiculos.SingletonCatalogo;
 import negocio.vehiculos.Vehiculo;
 

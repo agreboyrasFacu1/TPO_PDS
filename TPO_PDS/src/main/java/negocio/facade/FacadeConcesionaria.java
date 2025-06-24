@@ -14,21 +14,8 @@ import negocio.personas.Cliente;
 import negocio.personas.Vendedor;
 import negocio.reportes.GeneradorReporte;
 import negocio.reportes.Reporte;
-import negocio.state.Cobranzas;
-import negocio.state.Embarque;
-import negocio.state.Entrega;
-import negocio.state.Impuestos;
-import negocio.state.Logistica;
-import negocio.state.Seguimiento;
-import negocio.state.StateArea;
-import negocio.state.Ventas;
-import negocio.vehiculos.Auto;
-import negocio.vehiculos.Camion;
-import negocio.vehiculos.Camioneta;
-import negocio.vehiculos.ConfiguracionAd;
-import negocio.vehiculos.Moto;
-import negocio.vehiculos.SingletonCatalogo;
-import negocio.vehiculos.Vehiculo;
+import negocio.state.*;
+import negocio.vehiculos.*;
 import datos.serializacion.RepositorioClientes;
 import excepciones.ElementoNoEncontrado;
 import excepciones.ElementoYaExiste;
@@ -47,6 +34,10 @@ public class FacadeConcesionaria {
     // Métodos públicos para listar datos
     public List<PedidoCompra> obtenerTodosPedidos() {
         return controladorPedido.obtenerTodosPedidos();
+    }
+
+    public List<PedidoCompra> obtenerPedidosCliente(int dni){
+        return controladorPedido.obtenerPedidosCliente(dni);
     }
 
     public void visualizarClientes() {
@@ -206,6 +197,10 @@ public class FacadeConcesionaria {
 
     public Vehiculo buscarVehiculo(String modelo) throws ElementoNoEncontrado {
         return controladorPedido.buscarVehiculo(modelo);
+    }
+
+    public Cliente buscarClientePorDni(int dni){
+        return RepoClientes.obtenerClienteDadoDNI(dni);
     }
 
     // Métodos privados para seleccionar estado y rango fechas usados internamente
