@@ -103,7 +103,22 @@ public class ControladorPedido {
         SingletonCatalogo.getInstance().agregarVehiculo(vehiculo);
     }
 
-    public void eliminarVehiculo(String modelo) throws ElementoNoEncontrado {
+    /**
+     * Elimina un vehículo del catálogo solo si no está asociado a pedidos activos.
+     * 
+     * @param modelo Modelo del vehículo a eliminar.
+     * @throws ElementoNoEncontrado si no existe el vehículo.
+     * @throws IllegalStateException si el vehículo está asociado a pedidos activos.
+     */
+    public void eliminarVehiculo(String modelo) throws ElementoNoEncontrado, IllegalStateException {
+        // Validar que el vehículo no esté asociado a pedidos activos
+        boolean estaEnPedido = repositorioPedidos.obtenerTodos().stream()
+            .anyMatch(p -> p.getVehiculo().getModelo().equalsIgnoreCase(modelo));
+        
+        if (estaEnPedido) {
+            throw new IllegalStateException("El vehículo está asociado a un pedido y no puede eliminarse.");
+        }
+        
         SingletonCatalogo.getInstance().eliminarVehiculo(modelo);
     }
 

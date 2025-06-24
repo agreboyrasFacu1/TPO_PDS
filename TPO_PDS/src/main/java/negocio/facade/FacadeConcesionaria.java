@@ -215,10 +215,11 @@ public class FacadeConcesionaria {
         
         try {
             controladorPedido.eliminarVehiculo(modelo);
-            Catalogo.eliminarVehiculo(modelo);
             System.out.println("Vehículo eliminado exitosamente.");
         } catch (ElementoNoEncontrado e) {
-            System.out.println("" + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
+        } catch (IllegalStateException e) {
+            System.out.println("No se puede eliminar: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Error al eliminar vehículo: " + e.getMessage());
         }
@@ -234,7 +235,7 @@ public class FacadeConcesionaria {
             System.out.println("Vehículo encontrado:");
             System.out.println(vehiculo.mostrarDetalleConPrecios());
         } catch (ElementoNoEncontrado e) {
-            System.out.println("Error " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Error al buscar vehículo: " + e.getMessage());
         }
